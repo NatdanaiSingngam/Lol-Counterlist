@@ -1,0 +1,26 @@
+(function(root){
+const set=s=>new Set(s.split(' '));
+const dash=set('Ahri Akali Akshan Ambessa Aatrox Azir Belveth Briar Camille Diana Ekko Elise Fiora Fizz Galio Gnar Gragas Graves Gwen Hecarim Irelia JarvanIV Jax Jayce Kalista Kayn Khazix Kindred Kled KSante LeeSin Leona Lucian MonkeyKing Naafiri Nidalee Nilah Pantheon Poppy Qiyana Quinn Rakan RekSai Renekton Rengar Riven Samira Sejuani Shen Shyvana Sylas Talon Tristana Tryndamere Urgot Vi Viego Warwick XinZhao Yasuo Yone Zac');
+const projectile=set('Ahri Ashe Brand Caitlyn Corki Draven Elise Ezreal Heimerdinger Hwei Janna Jhin Jinx Kalista Karma Kennen KogMaw Leblanc LeeSin Lucian Lulu Lux Mel Morgana Nami Neeko Nidalee Orianna Quinn Renata Senna Seraphine Sivir Smolder Sona Soraka Syndra Taliyah Teemo Thresh Tristana TwistedFate Twitch Varus Vayne Veigar Vex Viktor Xerath Yuumi Zeri Ziggs Zoe Zyra');
+function feature(actor,target){const a=RiftItems.inferThreats(actor),b=RiftItems.inferThreats(target);const name=actor.name;
+if(actor.id==='Jax'&&b.attacks)return {reason:`${name} ใช้ E หลบการโจมตีปกติ แล้วสตันคนที่อยู่ใกล้ จึงตัดจังหวะดาเมจจากการตีของ ${target.name}`,tip:'รอให้ Counter Strike (E) จบก่อนเริ่มแลกด้วยการโจมตีปกติ และถอยให้พ้นระยะสตัน'};
+if(actor.id==='Rammus'&&b.attacks&&b.damage!=='magic')return {reason:`${name} ใช้ W เพิ่มเกราะและสะท้อนดาเมจจากการโจมตี พร้อม E บังคับให้ตี จึงกดดันสายโจมตีปกติ`,tip:'หลีกเลี่ยงการตีต่อขณะที่ Defensive Ball Curl (W) ทำงาน ระวัง Taunt และให้ทีมช่วยทำดาเมจเวท'};
+if(actor.id==='Teemo'&&b.attacks)return {reason:`Blind จาก Q ของ ${name} ทำให้การโจมตีปกติพลาด จึงขัดจังหวะดาเมจของ ${target.name}`,tip:'อย่าใช้จังหวะเร่งโจมตีระหว่างติด Blind รอให้หมดก่อนเข้าประชิด และใช้เลนส์ตรวจเห็ดเมื่อเดินเข้าพื้นที่เสี่ยง'};
+if(actor.id==='Poppy'&&dash.has(target.id))return {reason:`W ของ ${name} หยุดการพุ่งรอบตัว จึงขัดจังหวะเข้าหรือหนีของ ${target.name}`,tip:'เก็บสกิลพุ่งไว้จน W หมด และยืนห่างกำแพงเพื่อไม่ให้ E ผลักติดกำแพงแล้วสตัน'};
+if(actor.id==='Yasuo'&&projectile.has(target.id))return {reason:`Wind Wall (W) ของ ${name} บล็อกกระสุนสกิลหลายชิ้นของ ${target.name} จึงทำให้คอมโบเสียจังหวะ`,tip:'ล่อให้ใช้ Wind Wall ก่อน แล้วเปลี่ยนมุมยิงหรือรอให้กำแพงหมด ไม่ใช้คอมโบกระสุนทั้งหมดพร้อมกัน'};
+if(actor.id==='Ahri'&&dash.has(target.id))return {reason:`Charm (E) ของ ${name} หยุดการเคลื่อนที่จากสกิล ทำให้ ${target.name} เข้าถึงตัวได้ยากหากพุ่งตรงเข้ามา`,tip:'หลบหรือล่อ Charm ก่อนพุ่งเข้า และดูว่ามี Spirit Rush เหลือให้หนีหรือไม่'};
+if(a.suppression)return {reason:`${name} มี Suppression ที่ล็อกเป้าหมาย จึงหยุดจังหวะเข้าทำหรือหนีของ ${target.name} ได้`,tip:'อย่าเดินเข้าระยะล็อกโดยไม่มีเพื่อนช่วย เก็บ QSS ไว้สำหรับจังหวะ Suppression หากถูกเลือกเป็นเป้าหมายหลัก'};
+if(actor.stats.attackrange>=450&&target.stats.attackrange<250)return {reason:`${name} มีระยะโจมตีปกติไกลกว่า จึงมีโอกาสกดเลือด ${target.name} ระหว่างเดินเข้าหาหรือเก็บครีป`,tip:'รักษาเลือดไว้ก่อนเข้าถึงตัว ใช้มินเนียนหรือพุ่มลดการถูกโจมตีฟรี และเข้าหลังคู่ต่อสู้ใช้สกิลหนี'};
+if(a.cc&&b.attacks)return {reason:`CC ของ ${name} สามารถขัดช่วงที่ ${target.name} ต้องโจมตีต่อเนื่องเพื่อทำดาเมจ`,tip:'ไม่ทุ่มสกิลเข้าหาก CC สำคัญยังพร้อม รอล่อให้ใช้ก่อนหรือให้เพื่อนเปิดไฟต์แทน'};
+if(a.healing)return {reason:`${name} มีการฟื้นเลือด จึงอาจได้เปรียบเมื่อ ${target.name} แลกยาวแต่ปิดการต่อสู้ไม่สำเร็จ`,tip:'เน้นแลกสั้นและถอยออกจากจังหวะฮีล พิจารณาลดฮีลเมื่อการฟื้นเลือดเป็นปัญหาจริง'};
+if(a.shields)return {reason:`โล่ของ ${name} ช่วยรับดาเมจช่วงที่ ${target.name} ใช้คอมโบ จึงอาจทำให้การแลกครั้งนั้นไม่คุ้ม`,tip:'ล่อโล่ด้วยดาเมจบางส่วนก่อน อย่าใช้สกิลสำคัญทั้งหมดลงโล่ แล้วกลับไปแลกเมื่อโล่หมด'};
+if(a.attacks&&target.stats.attackrange<250)return {reason:`${name} พึ่งการโจมตีต่อเนื่อง จึงมีโอกาสสะสมดาเมจเมื่อ ${target.name} อยู่ในระยะนาน`,tip:'อย่าปล่อยให้ตีฟรีนาน ใช้การแลกสั้น ถอยหลังคอมโบ และรอ CC หรือคูลดาวน์สำคัญก่อนเข้าซ้ำ'};
+return null;}
+function advice(own,enemy,side,wr){const disadvantage=side==='bad';const actor=disadvantage?enemy:own,target=disadvantage?own:enemy;const f=feature(actor,target);const risks=feature(enemy,own);const heading=disadvantage?'จุดที่อาจทำให้เสียเปรียบ':'จุดที่ใช้สร้างความได้เปรียบ';
+let reason=f?.reason??`สถิติชุดนี้ให้ ${own.name} ชนะ ${wr}% ในคู่นี้ แต่ยังไม่มีเหตุผลเฉพาะคู่ที่ยืนยันได้จากข้อมูลที่เว็บใช้`;
+let play=disadvantage?(f?.tip??'เล่นเผื่อจังหวะผิดพลาด ไม่แลกเมื่อสกิลสำคัญยังไม่พร้อม และใช้ตำแหน่งเพื่อนร่วมทีมช่วยลดความเสี่ยง'):(f?`ใช้จุดเด่นนี้ในจังหวะที่สกิลพร้อม แล้วเก็บสกิลสำคัญไว้คุมการตอบโต้ของ ${enemy.name}`:'รักษาจังหวะการแลกและคุมพื้นที่ตามหน้าที่ของตัวที่เล่น อัตราชนะสูงกว่าไม่ได้ทำให้ชนะทุกจังหวะ');
+let caution=disadvantage?`หากเสียเลือดหรือสกิลหนีไปแล้ว อย่าฝืนเล่นจังหวะเดิมซ้ำกับ ${enemy.name}`:(risks?`${risks.reason} — แม้สถิติได้เปรียบ ก็ต้องระวังจุดนี้`:`อย่าไล่ ${enemy.name} เกินวิสัยทัศน์หรือฝืนเมื่อเสียสกิลสำคัญ สถิติได้เปรียบไม่รับประกันผลในเกมนี้`);
+if(own.id==='Briar'){caution+=' • ระหว่าง Blood Frenzy จะไล่เป้าหมายอัตโนมัติ ควรเก็บ E ไว้ยกเลิกและระวังการถูกพาเข้าใต้ป้อม';if(!disadvantage&&f?.reason.includes('ฟื้นเลือด'))play='เลือกไฟต์ที่มีเวลาโจมตีและฟื้นเลือด แต่เก็บ E ไว้หยุด Blood Frenzy เมื่อเป้าหมายพาคุณเข้าพื้นที่อันตราย';}
+return {heading,reason,play,caution,specific:Boolean(f)};}
+root.RiftAdvice={advice};
+})(typeof window!=='undefined'?window:globalThis);
